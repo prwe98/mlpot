@@ -1,0 +1,110 @@
+# MLPot Configuration File
+# This file contains default configuration for training molecular potential models
+
+# Model Configuration
+model:
+  name: "EquivariantNet"
+  hidden_dim: 512
+  num_layers: 4
+  num_radial_basis: 128
+  cutoff_radius: 6.0
+  max_neighbors: 20
+  predict_forces: true
+  direct_force_prediction: true
+  use_periodic_boundary: false
+  online_graph_construction: true
+  num_elements: 83
+
+# Radial Basis Function Configuration
+radial_basis:
+  name: "gaussian"  # Options: gaussian, bessel
+  
+# Envelope Function Configuration
+envelope:
+  name: "polynomial"  # Options: polynomial, exponential
+  exponent: 5
+
+# Training Configuration
+training:
+  batch_size: 64
+  epochs: 1000
+  learning_rate: 0.0002
+  weight_decay: 0.0
+  gradient_clip: 100.0
+  use_ema: true
+  ema_decay: 0.999
+  
+# Loss Configuration
+loss:
+  energy_weight: 1.0
+  force_weight: 50.0
+  loss_type: "l1"  # Options: l1, l2
+
+# Optimizer Configuration
+optimizer:
+  name: "adamw"  # Options: adamw, adam, sgd
+  amsgrad: true
+  
+# Scheduler Configuration
+scheduler:
+  name: "reduce_lr_on_plateau"  # Options: reduce_lr_on_plateau, cosine, step
+  mode: "min"
+  factor: 0.8
+  patience: 10
+  min_lr: 0.000001
+  
+# Data Configuration
+data:
+  format: "lmdb"  # Options: lmdb, pickle, npz
+  normalization: "zscore"  # Options: zscore, minmax, none
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+  
+# DataLoader Configuration
+dataloader:
+  num_workers: 4
+  pin_memory: true
+  persistent_workers: true
+  
+# System Configuration
+system:
+  device: "auto"  # Options: auto, cuda, cpu, mps
+  mixed_precision: false
+  deterministic: false
+  benchmark: true
+  
+# Logging Configuration
+logging:
+  log_level: "INFO"
+  log_frequency: 10
+  save_frequency: 50
+  use_wandb: false
+  wandb_project: "mlpot"
+  
+# Output Configuration
+output:
+  output_dir: "./outputs"
+  save_best_only: false
+  save_last: true
+  create_plots: true
+  save_predictions: false
+
+# Early Stopping Configuration
+early_stopping:
+  enabled: true
+  patience: 20
+  min_delta: 0.0001
+  monitor: "val_total_loss"
+
+# Evaluation Configuration
+evaluation:
+  metrics:
+    - "energy_mae"
+    - "force_mae"
+    - "energy_rmse"
+    - "force_rmse"
+    - "energy_r2"
+    - "force_r2"
+  create_plots: true
+  save_predictions: false
